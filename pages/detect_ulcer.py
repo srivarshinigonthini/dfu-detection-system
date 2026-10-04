@@ -186,8 +186,15 @@ MODEL_PATH = "dfu_hybrid_model.keras"
 
 @st.cache_resource
 def load_model():
-    return tf.keras.models.load_model(MODEL_PATH)
-
+    from tensorflow.keras.applications.inception_resnet_v2 import preprocess_input as inception_preprocess
+    return tf.keras.models.load_model(
+        MODEL_PATH,
+        custom_objects={
+            "inception_preprocess": inception_preprocess,
+            "preprocess_input": inception_preprocess,
+        },
+        safe_mode=False,
+    )
 
 model = load_model()
 classes = ["Healthy", "Ulcer"]
